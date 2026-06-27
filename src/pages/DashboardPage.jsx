@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { BookOpenCheck, CreditCard, Gauge, RefreshCw } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar.jsx";
 import api from "../api/client.js";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export default function DashboardPage() {
   const { user, setUser } = useAuth();
+  const navigate = useNavigate();
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -98,7 +100,19 @@ export default function DashboardPage() {
               {enrollments.length ? (
                 <div className="mt-5 space-y-4">
                   {enrollments.map((course) => (
-                    <article key={course.courseId} className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
+                    <article
+                      key={course.courseId}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => navigate(`/courses/${course.courseId}`)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          navigate(`/courses/${course.courseId}`);
+                        }
+                      }}
+                      className="cursor-pointer rounded-lg border border-white/10 bg-white/[0.03] p-4 transition hover:border-cyan/60 hover:bg-cyan/[0.04] focus:outline-none focus:ring-2 focus:ring-cyan focus:ring-offset-2 focus:ring-offset-ink"
+                    >
                       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
                         <div>
                           <h3 className="font-bold text-white">{course.courseTitle}</h3>
@@ -113,7 +127,11 @@ export default function DashboardPage() {
                           {course.progress}% complete
                         </span>
                       </div>
-                      <div className="mt-4">
+                      <div
+                        className="mt-4"
+                        onClick={(event) => event.stopPropagation()}
+                        onKeyDown={(event) => event.stopPropagation()}
+                      >
                         <input
                           aria-label={`Progress for ${course.courseTitle}`}
                           type="range"

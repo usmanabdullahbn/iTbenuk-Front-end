@@ -7,6 +7,7 @@ import DashboardPage from "./pages/DashboardPage.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
 import ProgramsPage from "./pages/ProgramsPage.jsx";
 import EnrollmentPage from "./pages/EnrollmentPage.jsx";
+import CourseContentPage from "./pages/CourseContentPage.jsx";
 
 function ProtectedRoute({ children }) {
   const { token, loading } = useAuth();
@@ -64,6 +65,14 @@ export default function App() {
         element={
           <ProtectedRoute>
             <DashboardPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/courses/:courseId"
+        element={
+          <ProtectedRoute>
+            <CourseContentPage />
           </ProtectedRoute>
         }
       />
